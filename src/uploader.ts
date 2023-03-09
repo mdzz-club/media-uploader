@@ -23,7 +23,7 @@ export async function nostrBuildUpload(blob: Blob, name: string | null, t: strin
 export async function voidCatUpload(blob: Blob, name: string | null, t: string | null) {
     const file = makeFile(blob, name, t)
     const buffer = await file.arrayBuffer()
-    const hash = (await crypto.subtle.digest("SHA-256", buffer))
+    const hash = await crypto.subtle.digest("SHA-256", buffer)
     const res = await fetch("https://void.cat/upload?cli=true", {
         method: "POST",
         headers: {
