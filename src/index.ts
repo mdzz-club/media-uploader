@@ -8,7 +8,7 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { nostrBuildUpload, voidCatUpload } from "./uploader";
+import { memberCashUpload, nostrBuildUpload, voidCatUpload } from "./uploader";
 
 export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -24,7 +24,11 @@ export interface Env {
 	// MY_SERVICE: Fetcher;
 }
 
-const Uploaders = [nostrBuildUpload, voidCatUpload]
+const Uploaders = [
+	nostrBuildUpload,
+	voidCatUpload,
+	memberCashUpload,
+]
 
 export default {
 	async fetch(req: Request): Promise<Response> {

@@ -37,3 +37,15 @@ export async function voidCatUpload(blob: Blob, name: string | null, t: string |
     url.protocol = "https://"
     return url.href
 }
+
+export async function memberCashUpload(blob: Blob, name: string | null, t: string | null) {
+    const file = makeFile(blob, name, t)
+    const body = new FormData()
+    body.append("firstfile", file)
+    const res = await fetch("https://member.cash/v2/uploadfile", {
+        method: "POST",
+        body,
+    })
+    const json = await res.json() as Record<string, string>
+    return json.memberurl
+}
