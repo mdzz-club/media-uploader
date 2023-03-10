@@ -49,3 +49,15 @@ export async function memberCashUpload(blob: Blob, name: string | null, t: strin
     const json = await res.json() as Record<string, string>
     return json.memberurl
 }
+
+export async function lainLaUpload(blob: Blob, name: string | null, t: string | null) {
+    const file = makeFile(blob, name, t)
+    const body = new FormData()
+    body.append("files[]", file)
+    const res = await fetch("https://pomf2.lain.la/upload.php", {
+        method: "POST",
+        body,
+    })
+    const json = await res.json() as { files: { url: string }[] }
+    return json.files[0].url
+}

@@ -8,7 +8,7 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { memberCashUpload, nostrBuildUpload, voidCatUpload } from "./uploader";
+import { lainLaUpload, memberCashUpload, nostrBuildUpload, voidCatUpload } from "./uploader";
 
 export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -28,6 +28,7 @@ const Uploaders = [
 	nostrBuildUpload,
 	voidCatUpload,
 	memberCashUpload,
+	lainLaUpload,
 ]
 
 export default {
