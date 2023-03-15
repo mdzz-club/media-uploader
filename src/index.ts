@@ -8,42 +8,43 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { lainLaUpload, memberCashUpload, nostrBuildUpload, voidCatUpload } from "./uploader";
+import { lainLaUpload, memberCashUpload, nostrBuildUpload, nostrImgUpload, voidCatUpload } from "./uploader";
 
 export interface Env {
-	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
-	// MY_KV_NAMESPACE: KVNamespace;
-	//
-	// Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
-	// MY_DURABLE_OBJECT: DurableObjectNamespace;
-	//
-	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
-	// MY_BUCKET: R2Bucket;
-	//
-	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
-	// MY_SERVICE: Fetcher;
+  // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
+  // MY_KV_NAMESPACE: KVNamespace;
+  //
+  // Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
+  // MY_DURABLE_OBJECT: DurableObjectNamespace;
+  //
+  // Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
+  // MY_BUCKET: R2Bucket;
+  //
+  // Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
+  // MY_SERVICE: Fetcher;
 }
 
 const Uploaders = [
-	nostrBuildUpload,
-	voidCatUpload,
-	memberCashUpload,
-	lainLaUpload,
+  nostrBuildUpload,
+  voidCatUpload,
+  memberCashUpload,
+  lainLaUpload,
+  nostrImgUpload,
 ]
 
 export default {
-	async fetch(req: Request): Promise<Response> {
-		if (req.method !== "POST" && req.method !== "PUT") {
-			return new Response(null, { status: 404 })
-		}
+  async fetch(req: Request): Promise<Response> {
+    if (req.method !== "POST" && req.method !== "PUT") {
+      return new Response(null, { status: 404 })
+    }
 
-		const filename = req.headers.get("x-filename") || new URL(req.url).pathname.slice(1) || null
-		const type = req.headers.get("x-mime-type")
+    const filename = req.headers.get("x-filename") || new URL(req.url).pathname.slice(1) || null
+    const type = req.headers.get("x-mime-type")
 
-		const blob = await req.blob()
-		const fn = Uploaders[Math.floor(Uploaders.length * Math.random())]
+    const blob = await req.blob()
+    const fn = Uploaders[Math.floor(Uploaders.length * Math.random())]
 
-		const str = await fn(blob, filename, type)
-		return new Response(str)
-	},
+    const str = await fn(blob, filename, type)
+    return new Response(str)
+  },
 };
