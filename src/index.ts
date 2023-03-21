@@ -83,5 +83,13 @@ async function handleGetImage(req: Request) {
     return new Response(null, { status: 404 })
   }
   const imgUrl = new URL(paths.join("/"), `https://${host}`)
-  return fetch(imgUrl)
+  const origin = await fetch(imgUrl)
+
+  const res = new Response(origin.body, {
+    status: origin.status,
+    headers: origin.headers,
+  })
+  res.headers.set("cache-control", "max-age=31536000")
+
+  return res
 }
