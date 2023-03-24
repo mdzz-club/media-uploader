@@ -42,6 +42,12 @@ const AllowHosts = [
 
 export default {
   async fetch(req: Request): Promise<Response> {
+    if (req.method === "OPTIONS") {
+      return new Response(null, {
+        headers: { "access-control-allow-origin": "*" },
+      })
+    }
+
     if (req.method === "POST") {
       return await handleUpload(req)
     }
@@ -71,7 +77,9 @@ async function handleUpload(req: Request) {
   const cur = new URL(req.url)
   const target = new URL(u.host + u.pathname, cur.origin)
 
-  return new Response(target.href)
+  return new Response(target.href, {
+    headers: { "access-control-allow-origin": "*" },
+  })
 }
 
 async function handleGetImage(req: Request) {
