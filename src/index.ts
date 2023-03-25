@@ -40,12 +40,15 @@ const AllowHosts = [
   "i.nostrimg.com",
 ]
 
+const CORS = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-headers": "*",
+}
+
 export default {
   async fetch(req: Request): Promise<Response> {
     if (req.method === "OPTIONS") {
-      return new Response(null, {
-        headers: { "access-control-allow-origin": "*" },
-      })
+      return new Response(null, { headers: CORS })
     }
 
     if (req.method === "POST") {
@@ -54,6 +57,13 @@ export default {
 
     if (req.method == "PUT") {
       return await handleUpload(req)
+    }
+
+    if (req.method === "GET" && new URL(req.url).pathname === "/") {
+      return new Response(null, {
+        status: 307,
+        headers: { location: "https://github.com/mdzz-club/media-uploader" },
+      })
     }
 
     if (req.method === "GET") {
@@ -77,9 +87,7 @@ async function handleUpload(req: Request) {
   const cur = new URL(req.url)
   const target = new URL(u.host + u.pathname, cur.origin)
 
-  return new Response(target.href, {
-    headers: { "access-control-allow-origin": "*" },
-  })
+  return new Response(target.href, { headers: CORS })
 }
 
 async function handleGetImage(req: Request) {
